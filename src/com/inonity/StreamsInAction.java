@@ -61,7 +61,61 @@ public class StreamsInAction {
         /**
          * Flatten (concat)streams with flatmap
          */
-        concatStreams();
+        //concatStreams();
+
+        /**
+         * Grouping by value
+         */
+        //groupByValue();
+
+        /**
+         * Joining a stream to a single String
+         */
+        joinStreamToString();
+    }
+
+    /**
+     * A use case that comes across frequently, is creating a String from a stream, where the stream-items are separated
+     * by a certain character. The Collectors.joining() method can be used for this
+     */
+
+    private static void joinStreamToString() {
+        System.out.println(".................. Join stream to string ......................................................");
+
+        Stream<String> fruitStream = Stream.of("apple", "banana", "pear", "kiwi", "orange");
+        String result = fruitStream.filter(s -> s.contains("a"))
+                .map(String::toUpperCase)
+                .sorted()
+                .collect(Collectors.joining(", "));
+        System.out.println(result);
+    }
+
+
+    /**
+     * Collectors.groupingBy when you need to perform the equivalent of a database cascaded "group by"
+     * operation
+     */
+    private static void groupByValue() {
+
+        System.out.println(".................. group by value ......................................................");
+
+        List<Student> list = new ArrayList<>();
+        list.add(new Student("Jack", SUBJECT.MATH.name(), 35.0));
+        list.add(new Student("Jack", SUBJECT.SCIENCE.name(), 12.9));
+        list.add(new Student("Jack", SUBJECT.GEOGRAPHY.name(), 37.0));
+
+        list.add(new Student("Sparrow", SUBJECT.ENGLISH.name(), 87.0));
+        list.add(new Student("Sparrow", SUBJECT.GEOGRAPHY.name(), 77.0));
+        list.add(new Student("Sparrow", SUBJECT.MATH.name(), 59.0));
+        list.add(new Student("Sparrow", SUBJECT.LITERATURE.name(), 12.0));
+
+
+        list.add(new Student("Captain", SUBJECT.LITERATURE.name(), 19.0));
+
+        Map<String, List<String>> map = list.stream()
+                .collect(Collectors.groupingBy(Student::getName,
+                                Collectors.mapping(Student::getSubject, Collectors.toList())));
+        System.out.println(map);
     }
 
     /**
